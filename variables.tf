@@ -3,10 +3,19 @@
 #
 # You must provide a value for each of these parameters.
 # ------------------------------------------------------------------------------
+variable "private_subnet_cidr_blocks" {
+  type        = list(string)
+  description = "The list of private subnet CIDR blocks in the PCA VPC (e.g. [\"10.10.2.0/24\", \"10.10.3.0/24\"])."
+}
 
-variable "subnet_id" {
+variable "public_subnet_cidr_blocks" {
+  type        = list(string)
+  description = "The list of public subnet CIDR blocks in the PCA VPC (e.g. [\"10.10.0.0/24\", \"10.10.1.0/24\"])."
+}
+
+variable "vpc_cidr_block" {
   type        = string
-  description = "The ID of the AWS subnet to deploy into (e.g. subnet-0123456789abcdef0)"
+  description = "The CIDR block to use for the PCA VPC (e.g. \"10.10.0.0/21\")."
 }
 
 # ------------------------------------------------------------------------------
@@ -14,22 +23,34 @@ variable "subnet_id" {
 #
 # These parameters have reasonable defaults.
 # ------------------------------------------------------------------------------
-variable "ami_owner_account_id" {
-  type        = string
-  description = "The ID of the AWS account that owns the Example AMI, or \"self\" if the AMI is owned by the same account as the provisioner."
-  default     = "self"
-}
-
-variable "aws_availability_zone" {
-  type        = string
-  description = "The AWS availability zone to deploy into (e.g. a, b, c, etc.)"
-  default     = "a"
-}
-
 variable "aws_region" {
   type        = string
   description = "The AWS region to deploy into (e.g. us-east-1)"
   default     = "us-east-1"
+}
+
+variable "provision_tgw_attachment_policy_description" {
+  type        = string
+  description = "The description to associate with the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account."
+  default     = "Allows provisioning of the Transit Gateway attachment in the PCA account."
+}
+
+variable "provision_tgw_attachment_policy_name" {
+  type        = string
+  description = "The name to assign the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account."
+  default     = "ProvisionTGWAttachment"
+}
+
+variable "read_terraform_state_policy_description" {
+  type        = string
+  description = "The description to associate with the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored."
+  default     = "Allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored."
+}
+
+variable "read_terraform_state_policy_name" {
+  type        = string
+  description = "The name to assign the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored."
+  default     = "ReadPCATransitGateWayAttachmentTerraformState"
 }
 
 variable "tags" {
