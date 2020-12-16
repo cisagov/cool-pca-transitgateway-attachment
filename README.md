@@ -2,38 +2,56 @@
 
 [![GitHub Build Status](https://github.com/cisagov/cool-pca-transitgateway-attachment/workflows/build/badge.svg)](https://github.com/cisagov/cool-pca-transitgateway-attachment/actions)
 
-This is a generic skeleton project that can be used to quickly get a
-new [cisagov](https://github.com/cisagov) [Terraform
-module](https://www.terraform.io/docs/modules/index.html) GitHub
-repository started.  This skeleton project contains [licensing
-information](LICENSE), as well as [pre-commit
-hooks](https://pre-commit.com) and
-[GitHub Actions](https://github.com/features/actions) configurations
-appropriate for the major languages that we use.
+This project is used to create the initial resources required in order to
+apply the Terraform code in
+[`cisagov/con-pca-cicd`](https://github.com/cisagov/con-pca-cicd).
 
-See [here](https://www.terraform.io/docs/modules/index.html) for more
-details on Terraform modules and the standard module structure.
+## Pre-requisites ##
 
-## Usage ##
+- [Terraform](https://www.terraform.io/) installed on your system.
+- An accessible AWS S3 bucket to store Terraform state
+  (specified in [`backend.tf`](backend.tf)).
+- An accessible AWS DynamoDB database to store the Terraform state lock
+  (specified in [`backend.tf`](backend.tf)).
+- Access to all of the Terraform remote states specified in
+  [`remote_states.tf`](remote_states.tf).
+- A Terraform [variables](variables.tf) file customized for your
+  environment, for example:
 
-```hcl
-module "example" {
-  source = "github.com/cisagov/cool-pca-transitgateway-attachment"
+  ```console
+  private_subnet_cidr_blocks = [
+    "10.10.2.0/24",
+    "10.10.3.0/24",
+  ]
+  public_subnet_cidr_blocks = [
+    "10.10.0.0/24",
+    "10.10.1.0/24",
+  ]
+  vpc_cidr_block = "10.10.0.0/21"
+  ```
 
-  aws_region            = "us-west-1"
-  aws_availability_zone = "b"
-  subnet_id             = "subnet-0123456789abcdef0"
+## Building the Terraform-based infrastructure ##
 
-  tags = {
-    Key1 = "Value1"
-    Key2 = "Value2"
-  }
-}
-```
+1. Create a Terraform workspace (if you haven't already done so) for
+   your assessment by running `terraform workspace new <workspace_name>`.
 
-## Examples ##
+   **IMPORTANT:** The Terraform workspace name must be the same as an
+   existing Terraform workspace for your deployment of
+   [`cisagov/cool-accounts-pca`](https://github.com/cisagov/cool-accounts-pca)
+   (e.g. `staging`, `production`, etc.) or your deployment will fail.
+1. Create a `<workspace_name>.tfvars` file with all of the required
+   variables (see [Inputs](#Inputs) below for details).
+1. Run the command `terraform init`.
+1. Add all necessary permissions by running the command:
 
-* [Deploying into the default VPC](https://github.com/cisagov/cool-pca-transitgateway-attachment/tree/develop/examples/default_vpc)
+   ```console
+   terraform apply -var-file=<workspace_name>.tfvars --target=aws_iam_policy.provision_tgw_attachment_policy --target=aws_iam_role_policy_attachment.provision_tgw_attachment_policy_attachment
+   ```
+
+1. Create all remaining Terraform infrastructure by running the command:
+
+   ```console
+   terraform apply -var-file=<workspace_name>.tfvars
 
 ## Requirements ##
 
@@ -47,39 +65,39 @@ module "example" {
 | Name | Version |
 |------|---------|
 | aws | ~> 3.0 |
+| aws.organizationsreadonly | ~> 3.0 |
+| aws.pca_provisionaccount | ~> 3.0 |
+| aws.provisionsharedservices | ~> 3.0 |
+| aws.provisionterraform | ~> 3.0 |
+| null | n/a |
+| terraform | n/a |
 
 ## Inputs ##
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| ami_owner_account_id | The ID of the AWS account that owns the Example AMI, or "self" if the AMI is owned by the same account as the provisioner. | `string` | `self` | no |
-| aws_availability_zone | The AWS availability zone to deploy into (e.g. a, b, c, etc.) | `string` | `a` | no |
 | aws_region | The AWS region to deploy into (e.g. us-east-1) | `string` | `us-east-1` | no |
-| subnet_id | The ID of the AWS subnet to deploy into (e.g. subnet-0123456789abcdef0) | `string` | n/a | yes |
+| private_subnet_cidr_blocks | The list of private subnet CIDR blocks in the PCA VPC (e.g. ["10.10.2.0/24", "10.10.3.0/24"]). | `list(string)` | n/a | yes |
+| provision_tgw_attachment_policy_description | The description to associate with the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `Allows provisioning of the Transit Gateway attachment in the PCA account.` | no |
+| provision_tgw_attachment_policy_name | The name to assign the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `ProvisionTGWAttachment` | no |
+| public_subnet_cidr_blocks | The list of public subnet CIDR blocks in the PCA VPC (e.g. ["10.10.0.0/24", "10.10.1.0/24"]). | `list(string)` | n/a | yes |
+| read_terraform_state_policy_description | The description to associate with the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `Allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored.` | no |
+| read_terraform_state_policy_name | The name to assign the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `ReadPCATransitGateWayAttachmentTerraformState` | no |
 | tags | Tags to apply to all AWS resources created | `map(string)` | `{}` | no |
+| vpc_cidr_block | The CIDR block to use for the PCA VPC (e.g. "10.10.0.0/21"). | `string` | n/a | yes |
 
 ## Outputs ##
 
 | Name | Description |
 |------|-------------|
-| arn | The EC2 instance ARN |
-| availability_zone | The AZ where the EC2 instance is deployed |
-| id | The EC2 instance ID |
-| private_ip | The private IP of the EC2 instance |
-| subnet_id | The ID of the subnet where the EC2 instance is deployed |
+| private_subnets | The private subnets in the PCA VPC. |
+| public_subnets | The public subnets in the PCA VPC. |
+| vpc | The PCA VPC. |
 
 ## Notes ##
 
 Running `pre-commit` requires running `terraform init` in every directory that
-contains Terraform code. In this repository, these are the main directory and
-every directory under `examples/`.
-
-## New Repositories from a Skeleton ##
-
-Please see our [Project Setup guide](https://github.com/cisagov/development-guide/tree/develop/project_setup)
-for step-by-step instructions on how to start a new repository from
-a skeleton. This will save you time and effort when configuring a
-new repository!
+contains Terraform code. In this repository, this is just the main directory.
 
 ## Contributing ##
 
