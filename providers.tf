@@ -27,7 +27,8 @@ provider "aws" {
 }
 
 # The provider used to manipulate the Transit Gateway in the Shared Services
-# account.
+# account and to associate the PCA VPC with the Route53 (private DNS) zone
+# in the Shared Services account.
 provider "aws" {
   alias  = "provisionsharedservices"
   region = var.aws_region
