@@ -92,6 +92,7 @@ apply the Terraform code in
 |------|-------------|
 | private_subnets | The private subnets in the PCA VPC. |
 | public_subnets | The public subnets in the PCA VPC. |
+| transit_gateway_id | The ID of the Transit Gateway in the Shared Services account. |
 | vpc | The PCA VPC. |
 
 ## Notes ##
