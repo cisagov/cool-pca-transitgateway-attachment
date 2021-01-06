@@ -5,6 +5,7 @@
 resource "aws_vpc" "pca" {
   provider = aws.pca_provisionaccount
 
-  cidr_block = var.vpc_cidr_block
-  tags       = var.tags
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_hostnames = true
+  tags                 = var.tags
 }
