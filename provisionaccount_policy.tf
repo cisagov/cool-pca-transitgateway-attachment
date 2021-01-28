@@ -22,6 +22,27 @@ data "aws_iam_policy_document" "provision_tgw_attachment_policy_doc" {
       "*",
     ]
   }
+
+  statement {
+    actions = [
+      "route53:AssociateVPCWithHostedZone",
+      "route53:DisassociateVPCFromHostedZone",
+    ]
+
+    resources = [
+      "arn:aws:route53:::hostedzone/${data.terraform_remote_state.sharedservices_networking.outputs.private_zone.id}"
+    ]
+  }
+
+  statement {
+    actions = [
+      "route53:ListHostedZonesByVPC",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
 }
 
 resource "aws_iam_policy" "provision_tgw_attachment_policy" {
