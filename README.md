@@ -15,10 +15,34 @@ apply the Terraform code in
   (specified in [`backend.tf`](backend.tf)).
 - Access to all of the Terraform remote states specified in
   [`remote_states.tf`](remote_states.tf).
-- A Terraform [variables](variables.tf) file customized for your
-  environment, for example:
+- The following COOL accounts and roles must have been created:
+  - Master:
+    [`cisagov/cool-accounts/master`](https://github.com/cisagov/cool-accounts/master)
+  - PCA:
+    [`cisagov/cool-accounts-pca`](https://github.com/cisagov/cool-accounts-pca)
+  - Shared Services:
+    [`cisagov/cool-accounts/sharedservices`](https://github.com/cisagov/cool-accounts/sharedservices)
+  - Terraform:
+    [`cisagov/cool-accounts/terraform`](https://github.com/cisagov/cool-accounts/terraform)
+  - Users:
+    [`cisagov/cool-accounts/users`](https://github.com/cisagov/cool-accounts/users)
+- Terraform in
+  [`cisagov/cool-sharedservices-networking`](https://github.com/cisagov/cool-sharedservices-networking)
+  must have been applied.
 
-  ```console
+## Usage ##
+
+1. Create a Terraform workspace (if you haven't already done so) by running
+   `terraform workspace new <workspace_name>`
+
+   **IMPORTANT:** The Terraform workspace name must be the same as an
+   existing Terraform workspace for your deployment of
+   [`cisagov/cool-accounts-pca`](https://github.com/cisagov/cool-accounts-pca)
+   (e.g. `staging`, `production`, etc.) or your deployment will fail.
+1. Create a `<workspace_name>.tfvars` file with all of the required
+  variables (see [Inputs](#Inputs) below for details):
+
+  ```hcl
   private_subnet_cidr_blocks = [
     "10.10.2.0/24",
     "10.10.3.0/24",
@@ -30,17 +54,6 @@ apply the Terraform code in
   vpc_cidr_block = "10.10.0.0/21"
   ```
 
-## Building the Terraform-based infrastructure ##
-
-1. Create a Terraform workspace (if you haven't already done so) for
-   your assessment by running `terraform workspace new <workspace_name>`.
-
-   **IMPORTANT:** The Terraform workspace name must be the same as an
-   existing Terraform workspace for your deployment of
-   [`cisagov/cool-accounts-pca`](https://github.com/cisagov/cool-accounts-pca)
-   (e.g. `staging`, `production`, etc.) or your deployment will fail.
-1. Create a `<workspace_name>.tfvars` file with all of the required
-   variables (see [Inputs](#Inputs) below for details).
 1. Run the command `terraform init`.
 1. Add all necessary permissions by running the command:
 
@@ -52,6 +65,7 @@ apply the Terraform code in
 
    ```console
    terraform apply -var-file=<workspace_name>.tfvars
+   ```
 
 ## Requirements ##
 
