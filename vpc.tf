@@ -7,5 +7,4 @@ resource "aws_vpc" "pca" {
 
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
-  tags                 = var.tags
 }

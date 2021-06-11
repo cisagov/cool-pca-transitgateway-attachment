@@ -9,7 +9,6 @@ module "private" {
 
   vpc_id             = aws_vpc.pca.id
   subnet_cidr_blocks = var.private_subnet_cidr_blocks
-  tags               = var.tags
 }
 
 module "public" {
@@ -20,5 +19,4 @@ module "public" {
 
   vpc_id             = aws_vpc.pca.id
   subnet_cidr_blocks = var.public_subnet_cidr_blocks
-  tags               = var.tags
 }
