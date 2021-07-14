@@ -72,41 +72,74 @@ apply the Terraform code in
 | Name | Version |
 |------|---------|
 | terraform | ~> 0.12.0 |
-| aws | ~> 3.0 |
+| aws | ~> 3.38 |
 
 ## Providers ##
 
 | Name | Version |
 |------|---------|
-| aws | ~> 3.0 |
-| aws.organizationsreadonly | ~> 3.0 |
-| aws.pca_provisionaccount | ~> 3.0 |
-| aws.provisionsharedservices | ~> 3.0 |
-| aws.provisionterraform | ~> 3.0 |
+| aws | ~> 3.38 |
+| aws.organizationsreadonly | ~> 3.38 |
+| aws.pca\_provisionaccount | ~> 3.38 |
+| aws.provisionsharedservices | ~> 3.38 |
+| aws.provisionterraform | ~> 3.38 |
 | null | n/a |
 | terraform | n/a |
+
+## Modules ##
+
+| Name | Source | Version |
+|------|--------|---------|
+| private | github.com/cisagov/distributed-subnets-tf-module | n/a |
+| public | github.com/cisagov/distributed-subnets-tf-module | n/a |
+
+## Resources ##
+
+| Name | Type |
+|------|------|
+| [aws_ec2_transit_gateway_route.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route) | resource |
+| [aws_ec2_transit_gateway_route_table_association.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route_table_association) | resource |
+| [aws_ec2_transit_gateway_vpc_attachment.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) | resource |
+| [aws_iam_policy.provision_tgw_attachment_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.read_terraform_state_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_role_policy_attachment.provision_tgw_attachment_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.read_terraform_state_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_route53_vpc_association_authorization.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_vpc_association_authorization) | resource |
+| [aws_route53_zone_association.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone_association) | resource |
+| [aws_vpc.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [null_resource.break_association_with_default_route_table](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_caller_identity.pca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.provision_tgw_attachment_policy_doc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.read_terraform_state_doc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_organizations_organization.cool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
+| [terraform_remote_state.master](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.pca](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.sharedservices](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.sharedservices_networking](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.terraform](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs ##
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| aws_region | The AWS region to deploy into (e.g. us-east-1) | `string` | `us-east-1` | no |
-| private_subnet_cidr_blocks | The list of private subnet CIDR blocks in the PCA VPC (e.g. ["10.10.2.0/24", "10.10.3.0/24"]). | `list(string)` | n/a | yes |
-| provision_tgw_attachment_policy_description | The description to associate with the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `Allows provisioning of the Transit Gateway attachment in the PCA account.` | no |
-| provision_tgw_attachment_policy_name | The name to assign the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `ProvisionTGWAttachment` | no |
-| public_subnet_cidr_blocks | The list of public subnet CIDR blocks in the PCA VPC (e.g. ["10.10.0.0/24", "10.10.1.0/24"]). | `list(string)` | n/a | yes |
-| read_terraform_state_policy_description | The description to associate with the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `Allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored.` | no |
-| read_terraform_state_policy_name | The name to assign the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `ReadPCATransitGateWayAttachmentTerraformState` | no |
-| tags | Tags to apply to all AWS resources created | `map(string)` | `{}` | no |
-| vpc_cidr_block | The CIDR block to use for the PCA VPC (e.g. "10.10.0.0/21"). | `string` | n/a | yes |
+| aws\_region | The AWS region to deploy into (e.g. us-east-1). | `string` | `"us-east-1"` | no |
+| private\_subnet\_cidr\_blocks | The list of private subnet CIDR blocks in the PCA VPC (e.g. ["10.10.2.0/24", "10.10.3.0/24"]). | `list(string)` | n/a | yes |
+| provision\_tgw\_attachment\_policy\_description | The description to associate with the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `"Allows provisioning of the Transit Gateway attachment in the PCA account."` | no |
+| provision\_tgw\_attachment\_policy\_name | The name to assign the IAM policy that allows provisioning of the Transit Gateway attachment in the PCA account. | `string` | `"ProvisionTGWAttachment"` | no |
+| public\_subnet\_cidr\_blocks | The list of public subnet CIDR blocks in the PCA VPC (e.g. ["10.10.0.0/24", "10.10.1.0/24"]). | `list(string)` | n/a | yes |
+| read\_terraform\_state\_policy\_description | The description to associate with the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `"Allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored."` | no |
+| read\_terraform\_state\_policy\_name | The name to assign the IAM policy that allows read-only access to the cool-pca-transitgateway-attachment state in the S3 bucket where Terraform state is stored. | `string` | `"ReadPCATransitGateWayAttachmentTerraformState"` | no |
+| tags | Tags to apply to all AWS resources created. | `map(string)` | `{}` | no |
+| vpc\_cidr\_block | The CIDR block to use for the PCA VPC (e.g. "10.10.0.0/21"). | `string` | n/a | yes |
 
 ## Outputs ##
 
 | Name | Description |
 |------|-------------|
-| private_subnets | The private subnets in the PCA VPC. |
-| public_subnets | The public subnets in the PCA VPC. |
-| transit_gateway_id | The ID of the Transit Gateway in the Shared Services account. |
+| private\_subnets | The private subnets in the PCA VPC. |
+| public\_subnets | The public subnets in the PCA VPC. |
+| transit\_gateway\_id | The ID of the Transit Gateway in the Shared Services account. |
 | vpc | The PCA VPC. |
 
 ## Notes ##
