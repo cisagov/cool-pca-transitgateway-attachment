@@ -40,7 +40,7 @@ apply the Terraform code in
    [`cisagov/cool-accounts-pca`](https://github.com/cisagov/cool-accounts-pca)
    (e.g. `staging`, `production`, etc.) or your deployment will fail.
 1. Create a `<workspace_name>.tfvars` file with all of the required
-  variables (see [Inputs](#Inputs) below for details):
+  variables (see [Inputs](#inputs) below for details):
 
   ```hcl
   private_subnet_cidr_blocks = [
