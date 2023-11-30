@@ -67,22 +67,23 @@ apply the Terraform code in
    terraform apply -var-file=<workspace_name>.tfvars
    ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements ##
 
 | Name | Version |
 |------|---------|
 | terraform | ~> 1.0 |
-| aws | ~> 3.38 |
+| aws | ~> 4.9 |
 
 ## Providers ##
 
 | Name | Version |
 |------|---------|
-| aws | ~> 3.38 |
-| aws.organizationsreadonly | ~> 3.38 |
-| aws.pca\_provisionaccount | ~> 3.38 |
-| aws.provisionsharedservices | ~> 3.38 |
-| aws.provisionterraform | ~> 3.38 |
+| aws | ~> 4.9 |
+| aws.organizationsreadonly | ~> 4.9 |
+| aws.pca\_provisionaccount | ~> 4.9 |
+| aws.provisionsharedservices | ~> 4.9 |
+| aws.provisionterraform | ~> 4.9 |
 | null | n/a |
 | terraform | n/a |
 
@@ -141,6 +142,7 @@ apply the Terraform code in
 | public\_subnets | The public subnets in the PCA VPC. |
 | transit\_gateway\_id | The ID of the Transit Gateway in the Shared Services account. |
 | vpc | The PCA VPC. |
+<!-- END_TF_DOCS -->
 
 ## Notes ##
 
